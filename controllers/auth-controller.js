@@ -1,18 +1,14 @@
 const httpErrors = require('http-errors')
 const User = require('../models/user-model')
+const { generateAccessToken } = require('../utils/jwt')
+const { authSchema } = require('../utils/validate-schema')
 
 module.exports = {
     signUp: async (req, res, next) => {
         try {
-            let { name, email, password, role } = req.body
+            const result = await authSchema.validateAsync(req.body)
 
-            if (!email || !password) throw httpErrors.BadRequest()
-
-            if (!name) name = 'default'
-
-            if (!role) role = 2
-
-            const user = new User({ name: name, email: email, password: password, role: role })
+            const user = new User(result)
 
             const saveUser = await user.save()
                 .catch(err => {
@@ -23,8 +19,15 @@ module.exports = {
                     }
                 })
 
-            res.send(saveUser)
+            const accessToken = await generateAccessToken({
+                aud: saveUser.id,
+                role: saveUser.role
+            })
+
+            res.send({ accessToken })
         } catch (error) {
+            if (error.isJoi === true) error.status = 400
+            
             next(error)
         }
     },
