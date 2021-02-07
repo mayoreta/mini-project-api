@@ -3,6 +3,7 @@ const morgan = require('morgan')
 const httpErrors = require('http-errors')
 require('dotenv').config()
 require('./utils/init-mongodb')
+const { veriryAccessToken } = require('./utils/jwt')
 
 const authRoute = require('./routes/auth-route')
 
@@ -11,7 +12,8 @@ app.use(morgan('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-app.get('/', (req, res, next) => {
+app.get('/', veriryAccessToken, (req, res, next) => {
+    console.log(req.payload)
     res.send('Hello')
 })
 

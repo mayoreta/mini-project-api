@@ -1,6 +1,8 @@
-@baseURL=http://localhost:3000
+@baseURL = http://localhost:3000
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiI2MDFmYmQ2YzU5ZThjYTQ4NzVhNDRlNWMiLCJyb2xlIjoxLCJpYXQiOjE2MTI2OTgyMDcsImV4cCI6MTYxMjcwMTgwN30.7nZwLKf26H3od0fAjhsbKzKd_UbfHrOUDgto9KbhsAo
 
 GET {{baseURL}}
+Authorization: {{token}}
 
 ### Auth: SignUp
 POST {{baseURL}}/auth/signup
