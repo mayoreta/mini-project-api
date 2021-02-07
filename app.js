@@ -3,6 +3,7 @@ const morgan = require('morgan')
 const httpErrors = require('http-errors')
 require('dotenv').config()
 require('./utils/init-mongodb')
+require('./utils/init-redis')
 const { veriryAccessToken } = require('./utils/jwt')
 
 const authRoute = require('./routes/auth-route')

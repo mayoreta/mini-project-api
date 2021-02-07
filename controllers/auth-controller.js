@@ -74,8 +74,5 @@ module.exports = {
         } catch (error) {
             next(error)
         }
-    },
-    signOut: async (req, res, next) => {
-        res.send('SIGNOUT')
     }
 }

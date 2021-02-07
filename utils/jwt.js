@@ -1,5 +1,6 @@
 const JWT = require('jsonwebtoken')
 const httpErrors = require('http-errors')
+const client = require('./init-redis')
 
 module.exports = {
     generateAccessToken: (payload) => {
@@ -39,9 +40,19 @@ module.exports = {
                 expiresIn: '1y'
             }
             JWT.sign(payload, secret, option, (err, token) => {
-                if (err) return reject(err)
+                if (err) {
+                    console.log(err.message)
+                    return reject(httpErrors.InternalServerError())
+                }
 
-                resolve(token)
+                client.SET(payload.aud, token, (err, reply) => {
+                    if (err) {
+                        console.log(err.message)
+                        return reject(httpErrors.InternalServerError())
+                    }
+
+                    resolve(token)
+                })
             })
         })
     },
@@ -49,14 +60,23 @@ module.exports = {
         return new Promise((resolve, reject) => {
             JWT.verify(token, process.env.REFRESH_TOKEN_SECRET, (err, payload) => {
                 if (err) {
-                    const message = err.name === 'JsonWebTokenError' ? 'Unauthorized' : err.message
-                    return reject(httpErrors.Unauthorized(message))
+                    console.log(err.message)
+                    return reject(httpErrors.InternalServerError())
                 }
 
-                resolve({
-                    aud: payload.aud,
-                    role: payload.role,
-                })
+                client.GET(payload.aud, (err, value) => {
+                    if (err) {
+                        console.log(err.message)
+                        return reject(httpErrors.InternalServerError())
+                    }
+
+                    if (value === token) return resolve({
+                        aud: payload.aud,
+                        role: payload.role,
+                    })
+
+                    reject(httpErrors.Unauthorized())
+                })                
             })
         })
     }
