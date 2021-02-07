@@ -27,12 +27,32 @@ module.exports = {
             res.send({ accessToken })
         } catch (error) {
             if (error.isJoi === true) error.status = 400
-            
+
             next(error)
         }
     },
     signIn: async (req, res, next) => {
-        res.send('SIGNIN')
+        try {
+            const result = await authSchema.validateAsync(req.body)
+
+            const user = await User.findOne({ email: result.email })
+
+            if (!user) throw httpErrors.NotFound('User not registered')
+
+            const isMatch = await user.isValidPassword(result.password)
+
+            if (!isMatch) throw httpErrors.Unauthorized('Invalid Username or Password')
+
+            const accessToken = await generateAccessToken({
+                aud: user.id,
+                role: user.role
+            })
+
+            res.send({ accessToken })
+        } catch (error) {
+            if (error.isJoi === true) return next(httpErrors.Unauthorized('Invalid Username or Password'))
+            next(error)
+        }
     },
     refreshToken: async (req, res, next) => {
         res.send('REFRESH TOKEN')

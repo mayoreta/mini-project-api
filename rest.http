@@ -15,6 +15,12 @@ Content-Type: application/json
 
 ### Auth: SignIn
 POST {{baseURL}}/auth/signin
+Content-Type: application/json
+
+{
+    "email": "loviana@mail.com",
+    "password": "123456"
+}
 
 ### Auth: RefreshToken
 POST {{baseURL}}/auth/refresh-token
