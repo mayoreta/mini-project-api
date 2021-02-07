@@ -9,7 +9,7 @@ POST {{baseURL}}/auth/signup
 Content-Type: application/json
 
 {
-    "email": "loviana4@mail.com",
+    "email": "loviana5@mail.com",
     "password": "123456",
     "name": "Loviana",
     "role": 1
@@ -26,6 +26,11 @@ Content-Type: application/json
 
 ### Auth: RefreshToken
 POST {{baseURL}}/auth/refresh-token
+Content-Type: application/json
+
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiI2MDFmYmQ2YzU5ZThjYTQ4NzVhNDRlNWMiLCJyb2xlIjoxLCJpYXQiOjE2MTI3MDQ0OTUsImV4cCI6MTY0NDI2MjA5NX0.zxLIYUXzcB8s6g71XrAk-Z_vYP4PWTWn30PxvJvyVWw"
+}
 
 ### Auth: SignOut
 DELETE {{baseURL}}/auth/signout

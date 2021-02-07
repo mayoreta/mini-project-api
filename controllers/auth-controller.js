@@ -1,6 +1,6 @@
 const httpErrors = require('http-errors')
 const User = require('../models/user-model')
-const { generateAccessToken } = require('../utils/jwt')
+const { generateAccessToken, generateRefreshToken, veriryRefreshToken } = require('../utils/jwt')
 const { authSchema } = require('../utils/validate-schema')
 
 module.exports = {
@@ -19,12 +19,15 @@ module.exports = {
                     }
                 })
 
-            const accessToken = await generateAccessToken({
+            const payload = {
                 aud: saveUser.id,
                 role: saveUser.role
-            })
+            }
 
-            res.send({ accessToken })
+            const accessToken = await generateAccessToken(payload)
+            const refreshToken = await generateRefreshToken(payload)
+
+            res.send({ accessToken, refreshToken })
         } catch (error) {
             if (error.isJoi === true) error.status = 400
 
@@ -43,19 +46,34 @@ module.exports = {
 
             if (!isMatch) throw httpErrors.Unauthorized('Invalid Username or Password')
 
-            const accessToken = await generateAccessToken({
+            const payload = {
                 aud: user.id,
                 role: user.role
-            })
+            }
 
-            res.send({ accessToken })
+            const accessToken = await generateAccessToken(payload)
+            const refreshToken = await generateRefreshToken(payload)
+
+            res.send({ accessToken, refreshToken })
         } catch (error) {
             if (error.isJoi === true) return next(httpErrors.Unauthorized('Invalid Username or Password'))
             next(error)
         }
     },
     refreshToken: async (req, res, next) => {
-        res.send('REFRESH TOKEN')
+        try {
+            const { token } = req.body
+            if (!token) throw httpErrors.BadRequest()
+
+            const payload = await veriryRefreshToken(token)
+
+            const accessToken = await generateAccessToken(payload)
+            const refreshToken = await generateRefreshToken(payload)
+
+            res.send({ accessToken, refreshToken })
+        } catch (error) {
+            next(error)
+        }
     },
     signOut: async (req, res, next) => {
         res.send('SIGNOUT')

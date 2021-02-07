@@ -31,5 +31,33 @@ module.exports = {
             req.payload = payload
             next()
         })
+    },
+    generateRefreshToken: (payload) => {
+        return new Promise((resolve, reject) => {
+            const secret = process.env.REFRESH_TOKEN_SECRET
+            const option = {
+                expiresIn: '1y'
+            }
+            JWT.sign(payload, secret, option, (err, token) => {
+                if (err) return reject(err)
+
+                resolve(token)
+            })
+        })
+    },
+    veriryRefreshToken: (token) => {
+        return new Promise((resolve, reject) => {
+            JWT.verify(token, process.env.REFRESH_TOKEN_SECRET, (err, payload) => {
+                if (err) {
+                    const message = err.name === 'JsonWebTokenError' ? 'Unauthorized' : err.message
+                    return reject(httpErrors.Unauthorized(message))
+                }
+
+                resolve({
+                    aud: payload.aud,
+                    role: payload.role,
+                })
+            })
+        })
     }
 }
