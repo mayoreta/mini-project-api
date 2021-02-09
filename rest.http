@@ -9,10 +9,8 @@ POST {{baseURL}}/auth/signup
 Content-Type: application/json
 
 {
-    "email": "loviana3@mail.com",
-    "password": "123456",
-    "name": "Loviana",
-    "role": 1
+    "username": "loviana3@mail.com",
+    "password": "123456"
 }
 
 ### Auth: SignIn
@@ -20,7 +18,7 @@ POST {{baseURL}}/auth/signin
 Content-Type: application/json
 
 {
-    "email": "loviana@mail.com",
+    "username": "loviana@mail.com",
     "password": "123456"
 }
 
@@ -32,5 +30,37 @@ Content-Type: application/json
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiI2MDIwMDBmYjdhYWY1OTk0OGZmZTQwZjMiLCJyb2xlIjoxLCJpYXQiOjE2MTI3MTE3ODgsImV4cCI6MTY0NDI2OTM4OH0.CfsFalZEBckq0UALqpKWZhWvfszKkx-n0xH0cDyC538"
 }
 
-### Auth: SignOut
-DELETE {{baseURL}}/auth/signout
+### User: Get All User
+GET {{baseURL}}/user
+
+### User: Create User
+POST {{baseURL}}/user
+Content-Type: application/json
+
+{
+    "name": "Loviana Mayoreta",
+    "username": "",
+    "email": "lovianam@mail.com",
+    "password": "123456",
+    "role": 1,
+    "address": "Jakarta Selatan"
+}
+
+### User: Get User by Id
+GET {{baseURL}}/user/602001117aaf59948ffe40f5
+
+### User: Update User
+PATCH {{baseURL}}/user/602001117aaf59948ffe40f5
+Content-Type: application/json
+
+{
+    "name": "Loviana Mayoreta",
+    "username": "mayoreta",
+    "email": "loviana2@mail.com",
+    "password": "123456",
+    "role": 1,
+    "address": "Bandung"
+}
+
+### User: Delete User
+DELETE {{baseURL}}/user/6020011c7aaf59948ffe40f7

@@ -1,14 +1,14 @@
 const httpErrors = require('http-errors')
 const User = require('../models/user-model')
 const { generateAccessToken, generateRefreshToken, veriryRefreshToken } = require('../utils/jwt')
-const { authSchema } = require('../utils/validate-schema')
+const { validateAuth } = require('../utils/validate-schema')
 
 module.exports = {
     signUp: async (req, res, next) => {
         try {
-            const result = await authSchema.validateAsync(req.body)
+            await validateAuth.validateAsync(req.body)
 
-            const user = new User(result)
+            const user = new User(req.body)
 
             const saveUser = await user.save()
                 .catch(err => {
@@ -38,7 +38,7 @@ module.exports = {
         try {
             const result = await authSchema.validateAsync(req.body)
 
-            const user = await User.findOne({ email: result.email })
+            const user = await User.findOne({ username: result.username })
 
             if (!user) throw httpErrors.NotFound('User not registered')
 

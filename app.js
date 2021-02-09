@@ -7,6 +7,7 @@ require('./utils/init-redis')
 const { veriryAccessToken } = require('./utils/jwt')
 
 const authRoute = require('./routes/auth-route')
+const userRoute = require('./routes/user-route')
 
 const app = express()
 app.use(morgan('dev'))
@@ -19,6 +20,7 @@ app.get('/', veriryAccessToken, (req, res, next) => {
 })
 
 app.use('/auth', authRoute)
+app.use('/user', userRoute)
 
 app.use(async (req, res, next) => {
     next(httpErrors.NotFound())

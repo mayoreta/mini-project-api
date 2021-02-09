@@ -1,10 +1,24 @@
 const Joi = require('joi')
 
 module.exports = {
-    authSchema: Joi.object({
-        email: Joi.string().email().lowercase().required(),
+    validateAuth: Joi.object({
+        username: Joi.string().min(2).required(),
         password: Joi.string().min(6).required(),
-        name: Joi.string().default('default'),
-        role: Joi.number().default(2),
+    }),
+    validateCreateUser: Joi.object({
+        username: Joi.string().min(2).required(),
+        password: Joi.string().min(6).required(),
+        name: Joi.string(),
+        email: Joi.string().email().lowercase(),
+        role: Joi.number(),
+        address: Joi.string(),
+    }),
+    validateUpdateUser: Joi.object({
+        username: Joi.string().min(2),
+        password: Joi.string().min(6),
+        name: Joi.string(),
+        email: Joi.string().email().lowercase(),
+        role: Joi.number(),
+        address: Joi.string(),
     })
 }
