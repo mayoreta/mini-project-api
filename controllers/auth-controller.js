@@ -36,7 +36,7 @@ module.exports = {
     },
     signIn: async (req, res, next) => {
         try {
-            const result = await authSchema.validateAsync(req.body)
+            const result = await validateAuth.validateAsync(req.body)
 
             const user = await User.findOne({ username: result.username })
 

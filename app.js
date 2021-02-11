@@ -5,6 +5,7 @@ require('dotenv').config()
 require('./utils/init-mongodb')
 require('./utils/init-redis')
 const { veriryAccessToken } = require('./utils/jwt')
+const { baseUrl } = require('./utils/const')
 
 const authRoute = require('./routes/auth-route')
 const userRoute = require('./routes/user-route')
@@ -14,13 +15,8 @@ app.use(morgan('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-app.get('/', veriryAccessToken, (req, res, next) => {
-    console.log(req.payload)
-    res.send('Hello')
-})
-
-app.use('/auth', authRoute)
-app.use('/user', userRoute)
+app.use(baseUrl.AUTH, authRoute)
+app.use(baseUrl.USER, veriryAccessToken, userRoute)
 
 app.use(async (req, res, next) => {
     next(httpErrors.NotFound())

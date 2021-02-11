@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
+const { userRole } = require('../utils/const')
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -26,22 +27,30 @@ const userSchema = new mongoose.Schema({
         type: String
     },
     role: {
-        type: Number,
+        type: String,
         required: true,
-        default: 2,
+        default: userRole.BASIC,
     }
-});
+})
 
-userSchema.pre('save', async function (next) {
+const hashingPassword = async function (next) {
     try {
+        let data = this._update
+        
+        if (!data) data = this
+
         const salt = await bcrypt.genSalt(10)
-        const hashedPassword = await bcrypt.hash(this.password, salt)
-        this.password = hashedPassword
+        const hashedPassword = await bcrypt.hash(data.password, salt)
+        data.password = hashedPassword
         next()
     } catch (error) {
         next(error)
     }
-})
+}
+
+userSchema.pre('save', hashingPassword)
+
+userSchema.pre('findOneAndUpdate', hashingPassword)
 
 userSchema.methods.isValidPassword = async function (password) {
     try {

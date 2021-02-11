@@ -10,7 +10,7 @@ module.exports = {
         password: Joi.string().min(6).required(),
         name: Joi.string(),
         email: Joi.string().email().lowercase(),
-        role: Joi.number(),
+        role: Joi.string(),
         address: Joi.string(),
     }),
     validateUpdateUser: Joi.object({
@@ -18,7 +18,7 @@ module.exports = {
         password: Joi.string().min(6),
         name: Joi.string(),
         email: Joi.string().email().lowercase(),
-        role: Joi.number(),
+        role: Joi.string(),
         address: Joi.string(),
     })
 }
