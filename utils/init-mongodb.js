@@ -7,7 +7,8 @@ mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
-    useFindAndModify: false
+    useFindAndModify: false,
+    auto_reconnect:true
 }, (err) => {
     if (!err) {
         console.log('MongoDB Connection Succeeded.')
